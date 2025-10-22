@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "CustomConnector": {
+      "connectionInfo": "Custom Connector: POS_APIs (Environment: FUSION SOLUTION PACKAGE)",
+      "connectorName": "POS_APIs",
+      "environmentUrl": "https://org9b0abc1a.crm5.dynamics.com/",
+      "environmentId": "6d10f066-29b4-ec66-a925-7211cb937590",
+      "type": "powerplatform.local"
+    }
+  }
+}
