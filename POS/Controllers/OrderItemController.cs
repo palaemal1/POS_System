@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.DTO;
+using Model.Entities;
 using Repository.IUnitOfWork;
+using System.Linq.Expressions;
+
 
 namespace POS.Controllers
 {
@@ -26,6 +29,20 @@ namespace POS.Controllers
             return Ok(new ResponseModel { Data = data });
         }
 
+        [HttpGet("GetOrderItemWithPagination")]
+        public async Task<IActionResult> GetOrderItemWithPagination(int page,int pageSize)
+        {
+            var data = await _orderItemService.GetOrderItemWithPagination(page, pageSize);
+            return Ok(new ResponseModel { Data = data });
+        }
+
+        [HttpGet("GetOrderItemWithPaginationDesc")]
+        public async Task<IActionResult> GetOrderItemWithPaginationDesc<TKey>(int page,int pageSize,Expression<Func<OrderItems,TKey>>orderBy)
+        {
+            var data = await _orderItemService.GetOrderItemWithPaginationDesc(page, pageSize, orderBy);
+            return Ok(new ResponseModel { Data = data });
+        }
+
         [HttpPost("AddOrderItem")]
         public async Task<IActionResult> AddOrderItem(AddNewOrderItem input)
         {
@@ -45,6 +62,20 @@ namespace POS.Controllers
         {
             await _orderItemService.DeleteOrderItem(id);
             return Ok("Delete order item successfully");
+        }
+
+        [HttpGet("GetAllOrderItemList")]
+        public async Task<IActionResult> GetAllOrderItemList()
+        {
+            var data = await _orderItemService.GetAllOrderItemList();
+            return Ok(new ResponseModel { Data = data });
+        }
+
+        [HttpPost("AddMultipleOrderItem")]
+        public async Task<IActionResult> AddMultipleOrderItem(IEnumerable<AddNewOrderItem> input)
+        {
+            await _orderItemService.AddMultipleOrderItem(input);
+            return Ok("Add multiple order item successfully");
         }
     }
 }

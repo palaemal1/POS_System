@@ -20,7 +20,7 @@ namespace BAL.Service
 
         public async Task<IEnumerable<Products>> GetAllProduct()
         {
-            var data = await _unitOfWork.Product.GetByCondition(x=>x.ActiveFlag==false || x.ActiveFlag == null );
+            var data = await _unitOfWork.Product.GetByCondition(x=>x.ActiveFlag==true || x.ActiveFlag == null );
             return data;
         }
 

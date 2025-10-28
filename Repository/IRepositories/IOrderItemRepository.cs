@@ -9,5 +9,6 @@ namespace Repository.IRepositories
 {
     public interface IOrderItemRepository:IGenericRepository<OrderItems>
     {
+        Task<IEnumerable<object>> GetAllOrderItemList();
     }
 }
