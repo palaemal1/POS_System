@@ -16,6 +16,10 @@ namespace Repository
         Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter);
         Task<IEnumerable<T>> GetAllAsyncWithPagination(int page, int pageSize);
         Task<IEnumerable<T>> GetAllAsyncWithPaginationByDesc<TKey>(int page, int pageSize, Expression<Func<T, TKey>> orderBy);
+        Task<IEnumerable<T>> GetAsyncWithPaginationByDesc(
+            int page,
+            int pageSize,
+            string orderByColumn);
         Task<IEnumerable<T>> GetByConditionWithPaginationByDesc<TKey>(Expression<Func<T, bool>> expression, int page, int pageSize, Expression<Func<T, TKey>> orderBy);
         Task<T?> GetById(int id);
         Task<T?> GetByGuid(Guid id);

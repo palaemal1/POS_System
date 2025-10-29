@@ -19,6 +19,10 @@ namespace BAL.IService
         Task<IEnumerable<object>> GetAllOrderItemList();
         Task AddMultipleOrderItem(IEnumerable<AddNewOrderItem> inputs);
         Task<IEnumerable<OrderItems>> GetOrderItemWithPagination(int page, int pageSize);
-        Task<IEnumerable<OrderItems>> GetOrderItemWithPaginationDesc<TKey>(int page, int pageSize, Expression<Func<OrderItems, TKey>> orderBy);
+        Task<IEnumerable<OrderItems>> GetOrderItemsWithPagination(
+            int page,
+            int pageSize,
+            bool descending = false);
+        Task<IEnumerable<OrderItems>> GetOrderItemsWithPaginationDesc(int page, int pageSize, string columnName);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using Microsoft.EntityFrameworkCore;
+using Model;
 using Model.Entities;
 using Repository.IRepositories;
 using System;
@@ -24,7 +25,7 @@ namespace Repository.Repositories
             var employee = _content.Employees.Where(x => x.ActiveFlag == true);
             var category = _content.Categories.Where(x => x.ActiveFlag == true);
 
-            var orderItemList = (from oIL in orderItem
+            var orderItemList =await (from oIL in orderItem
                                  join p in product on oIL.ProductId equals p.ProductId.ToString()
                                  join c in category on p.CategoryId equals c.CategoryId.ToString()
                                  join o in order on oIL.OrderId equals o.OrderId.ToString()
@@ -42,7 +43,7 @@ namespace Repository.Repositories
                                      orderNumber=o.OrderNumber, 
                                      taxAmt=o.TaxAmount, 
                                      categoryName=c.CategoryName
-                                 }).ToList();
+                                 }).ToListAsync();
 
             return orderItemList;
         }

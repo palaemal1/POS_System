@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Model;
+using Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,6 +134,29 @@ namespace Repository
 
             return await _entities
                 .OrderByDescending(orderBy)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+
+        public async Task<IEnumerable<T>> GetAsyncWithPaginationByDesc(
+            int page,
+            int pageSize,
+            string orderByColumn)
+         {
+            if (page < 1 || pageSize <= 0)
+                throw new ArgumentException("Page number must be greater than 0 and page size must be greater than 0.");
+
+                var totalCount = await _entities.CountAsync();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+                if (page > totalPages)
+                throw new ArgumentException($"Invalid page number. The page number should be between 1 and {totalPages}.");
+
+            
+                return await _entities
+                .OrderByDescending(e => EF.Property<object>(e, orderByColumn))
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

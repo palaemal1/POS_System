@@ -36,10 +36,20 @@ namespace POS.Controllers
             return Ok(new ResponseModel { Data = data });
         }
 
-        [HttpGet("GetOrderItemWithPaginationDesc")]
-        public async Task<IActionResult> GetOrderItemWithPaginationDesc<TKey>(int page,int pageSize,Expression<Func<OrderItems,TKey>>orderBy)
+        [HttpGet("GetOrderItemsWithPagination")]
+        public async Task<IActionResult> GetOrderItemsWithPagination(
+            int page,
+            int pageSize,
+            bool descending = false) 
         {
-            var data = await _orderItemService.GetOrderItemWithPaginationDesc(page, pageSize, orderBy);
+            var data = await _orderItemService.GetOrderItemsWithPagination(page, pageSize, descending);
+            return Ok(new ResponseModel { Data = data });
+        }
+
+        [HttpGet("GetOrderItemsWithPaginationDesc")]
+        public async Task<IActionResult> GetOrderItemsWithPaginationDesc(int page,int pageSize,string columnName)
+        {
+            var data = await _orderItemService.GetOrderItemsWithPaginationDesc(page, pageSize, columnName);
             return Ok(new ResponseModel { Data = data });
         }
 

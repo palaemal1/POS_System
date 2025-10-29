@@ -1,4 +1,5 @@
 ﻿using BAL.IService;
+using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.DTO;
 using Model.Entities;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BAL.Service
 {
@@ -36,11 +38,33 @@ namespace BAL.Service
         }
 
 
-        public async Task<IEnumerable<OrderItems>> GetOrderItemWithPaginationDesc<TKey>(int page,int pageSize,Expression<Func<OrderItems,TKey>> orderBy)
+        public async Task<IEnumerable<OrderItems>> GetOrderItemsWithPagination(
+            int page,
+            int pageSize,
+            bool descending = false)
         {
-            var data = await _unitofWork.OrderItem.GetAllAsyncWithPaginationByDesc(page, pageSize, orderBy);
+            if (page < 1 || pageSize <= 0)
+                throw new ArgumentException("Page number must be greater than 0 and page size must be greater than 0.");
+
+            
+            var data = await _unitofWork.OrderItem.GetAllAsyncWithPagination(page, pageSize);
+
+            
+            var ordered = descending
+                ? data.OrderByDescending(x => x.CreatedAt ?? DateTime.MinValue) 
+                : data.OrderBy(x => x.CreatedAt ?? DateTime.MinValue); 
+            var paged = ordered.Skip((page - 1) * pageSize).Take(pageSize);
+
+            return paged;
+        }
+
+       
+        public async Task<IEnumerable<OrderItems>> GetOrderItemsWithPaginationDesc(int page,int pageSize,string columnName)
+        {
+            var data = await _unitofWork.OrderItem.GetAsyncWithPaginationByDesc(page, pageSize, columnName);
             return data;
-        } 
+        }
+
 
         public async Task AddOrderItem(AddNewOrderItem input)
         {
@@ -83,7 +107,7 @@ namespace BAL.Service
 
         public async Task updateOrderItem(Guid id,UpdateOrderItemDTO input)
         {
-            var data = (await _unitofWork.OrderItem.GetByCondition(x => x.OrderItemId == id)).FirstOrDefault();
+            var data =  (await _unitofWork.OrderItem.GetByCondition(x => x.OrderItemId == id)).FirstOrDefault();
             if(data != null)
             {
                 data.OrderId = input.orderId;
