@@ -33,7 +33,12 @@ namespace Retail_API_.Controllers
 
         }
 
-
+        [HttpGet("DisplayProductList")]
+        public async Task<IActionResult> DisplayProduct()
+        {
+            var data = await _ProductService.DisplayProduct();
+            return Ok(new ResponseModel { Data = data });
+        }
         
 
         [HttpPost("AddNewProduct")]

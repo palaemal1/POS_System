@@ -1,4 +1,5 @@
-﻿using Model.Entities;
+﻿
+using Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Repository.IRepositories
     public interface IOrderItemRepository:IGenericRepository<OrderItems>
     {
         Task<IEnumerable<object>> GetAllOrderItemList();
+        Task<IEnumerable<object>> GetAllOrderItemListWithPagination(int page, int pageSize);
     }
 }

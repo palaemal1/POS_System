@@ -37,6 +37,11 @@ namespace BAL.Service
             return data;
         }
 
+        public async Task<IEnumerable<object>> GerOrderItemListWithPagination(int page, int pageSize)
+        {
+            var data = await _unitofWork.OrderItem.GetAllOrderItemListWithPagination(page, pageSize);
+            return data;
+        }
 
         public async Task<IEnumerable<OrderItems>> GetOrderItemsWithPagination(
             int page,

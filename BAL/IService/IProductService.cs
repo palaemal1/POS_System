@@ -19,5 +19,7 @@ namespace BAL.IService
         Task UpdateProduct(Guid id, UpdateProductDTO inputModel);
         Task DeleteProduct(Guid id);
 
+        Task<IEnumerable<object>> DisplayProduct();
+
     }
 }

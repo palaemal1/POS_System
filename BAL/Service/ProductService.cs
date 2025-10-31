@@ -24,7 +24,12 @@ namespace BAL.Service
             return data;
         }
 
-        
+        public async Task<IEnumerable<object>> DisplayProduct()
+        {
+            var data = await _unitOfWork.Product.DisplayProduct();
+            return data;
+        }
+
         public async Task AddProduct(AddProductDTO input)
         {
           
@@ -84,7 +89,7 @@ namespace BAL.Service
             await _unitOfWork.SaveChangesAsync();
         }
 
-        
+       
        
 
     }

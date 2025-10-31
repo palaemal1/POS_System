@@ -46,6 +46,13 @@ namespace POS.Controllers
             return Ok(new ResponseModel { Data = data });
         }
 
+        [HttpGet("GetOrderItemListWithPagination")]
+        public async Task<IActionResult> GetOrderItemListWithPagination(int page, int pageSize)
+        {
+            var data = await _orderItemService.GerOrderItemListWithPagination(page, pageSize);
+            return Ok(new ResponseModel { Data = data });
+        }
+
         [HttpGet("GetOrderItemsWithPaginationDesc")]
         public async Task<IActionResult> GetOrderItemsWithPaginationDesc(int page,int pageSize,string columnName)
         {

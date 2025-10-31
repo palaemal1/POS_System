@@ -8,5 +8,6 @@ namespace Repository.IRepositories
 {
     public interface IProductRepository:IGenericRepository<Products>
     {
+        Task<IEnumerable<object>> DisplayProduct();
     }
 }

@@ -24,5 +24,7 @@ namespace BAL.IService
             int pageSize,
             bool descending = false);
         Task<IEnumerable<OrderItems>> GetOrderItemsWithPaginationDesc(int page, int pageSize, string columnName);
+
+        Task<IEnumerable<object>> GerOrderItemListWithPagination(int page, int pageSize);
     }
 }
