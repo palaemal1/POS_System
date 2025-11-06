@@ -1,4 +1,5 @@
 ﻿using BAL.IService;
+using Microsoft.AspNetCore.Identity;
 using Model;
 using Model.DTO;
 using Model.Entities;
@@ -29,16 +30,18 @@ namespace BAL.Service
         }
         public async Task AddNewEmployee(AddNewEmployee input)
         {
+           
             var data =new Employees()
             {
                 EmployeeName = input.EmployeeName,
-                Password=input.password,
                 FullName=input.fullName, 
                 Role=input.role,
                 ActiveFlag=input.activeFlag, 
                 CreatedAt=input.createdDate, 
                 CreatedBy=input.createdBy
             };
+         
+            data.Password = new PasswordHasher<Employees>().HashPassword(data, input.password);
             await _unitofWork.Employee.Add(data);
             await _unitofWork.SaveChangesAsync();
         }

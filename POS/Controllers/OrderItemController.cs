@@ -1,4 +1,5 @@
 ﻿using BAL.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.DTO;
@@ -21,7 +22,7 @@ namespace POS.Controllers
             _unitofWork = unitofWork;
             _orderItemService = orderItemService;
         }
-
+        [Authorize]
         [HttpGet("GetAllOrderItem")]
         public async Task<IActionResult> GetOrderItem()
         {
@@ -29,6 +30,7 @@ namespace POS.Controllers
             return Ok(new ResponseModel { Data = data });
         }
 
+        
         [HttpGet("GetOrderItemWithPagination")]
         public async Task<IActionResult> GetOrderItemWithPagination(int page,int pageSize)
         {

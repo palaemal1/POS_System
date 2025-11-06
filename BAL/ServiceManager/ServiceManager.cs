@@ -25,6 +25,7 @@ namespace BAL.ServiceManager
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IOrderItemService, OrderItemService>();
+            services.AddScoped<IAuthService, AuthService>();
             //services.AddScoped<IInventoryTransactionService, InventoryTransactionService>();
             services.AddScoped<IOrderService, OrderService>();
         }

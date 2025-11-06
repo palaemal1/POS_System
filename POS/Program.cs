@@ -9,6 +9,9 @@ using Repository;                    // Namespace where DataContext is
 using Microsoft.Extensions.DependencyInjection;
 using Model;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.Extensions.Options;
 
 internal class Program
 {
@@ -18,16 +21,38 @@ internal class Program
 
         var appSettings = new AppSettings();
 
-        // Load AppSettings from appsettings.json
         builder.Configuration.GetSection("AppSettings").Bind(appSettings);
 
-        // Add essential services
+
         builder.Services.AddControllers();
 
-        // Enable Swagger/OpenAPI
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
+            c.AddSecurityDefinition(BearerTokenDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Description = "Enter bearer authorization: `Bearer Generated-JWT-Token`",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = BearerTokenDefaults.AuthenticationScheme
+                }
+            },
+            new string[] {}
+        }
+            });
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "POS API",
@@ -36,18 +61,32 @@ internal class Program
             });
             c.CustomOperationIds(apiDesc =>
             {
-                // Use the method name as operationId
+
                 return apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null;
             });
 
-            // Optional: Include XML comments if generated
+
             var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (File.Exists(xmlPath))
                 c.IncludeXmlComments(xmlPath);
         });
+        ServiceManager.SetServiceInfo(builder.Services, appSettings);
 
-        // Enable CORS for Power Apps / Power Automate
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => {
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuer=true,
+                     ValidIssuer = builder.Configuration["AppSettings:Issuer"], 
+                     ValidateAudience=true,
+                     ValidAudience = builder.Configuration["AppSettings:Audience"], 
+                     ValidateLifetime=true, 
+                     IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)), 
+                     ValidateIssuerSigningKey=true
+                 };
+                 });
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowPowerApps",
@@ -57,29 +96,28 @@ internal class Program
                     .AllowAnyHeader());
         });
 
-        // Register all your services and DB using ServiceManager helper
-        ServiceManager.SetServiceInfo(builder.Services, appSettings);
+
+       
 
         var app = builder.Build();
 
-        // Test database connection before app starts
-        using (var scope = app.Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<DataContent>();
-            try
-            {
-                var canConnect = db.Database.CanConnect();
-                Console.WriteLine(canConnect
-                    ? " Database connected successfully"
-                    : " Database connection failed");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($" Error connecting to database: {ex.Message}");
-            }
-        }
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var db = scope.ServiceProvider.GetRequiredService<DataContent>();
+        //    try
+        //    {
+        //        var canConnect = db.Database.CanConnect();
+        //        Console.WriteLine(canConnect
+        //            ? " Database connected successfully"
+        //            : " Database connection failed");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($" Error connecting to database: {ex.Message}");
+        //    }
+        //}
 
-        // Configure HTTP pipeline
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -90,6 +128,7 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthorization();
 
         app.UseCors("AllowPowerApps");
 
