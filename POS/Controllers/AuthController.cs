@@ -2,13 +2,14 @@
 using Model.DTO;
 using Model.Entities;
 using BAL.IService;
+using Model;
 namespace POS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController(IAuthService authService) : ControllerBase
     {
-      
+
         //[HttpPost("register")]
         //public async Task<ActionResult<Employees>> Register(AddNewEmployeeDTO input)
         //{
@@ -21,16 +22,29 @@ namespace POS.Controllers
         //}
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(AddNewEmployeeDTO input)
+        public async Task<ActionResult<TokenResponseDTO>> Login(AddNewEmployeeDTO input)
         {
-            var token = await authService.Login(input);
-            if(token is null)
+            var result = await authService.Login(input);
+            if (result is null)
             {
                 return BadRequest("Invalid employee name or password!");
             }
-            return Ok(token);
+            return Ok(new ResponseModel
+            {
+                Data = new List<object> { result }
+            });
         }
 
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDTO>>RefreshToken(RefreshTokenRequestDTO request)
+        {
+            var result = await authService.RefreshTokenAsync(request); 
+            if(result is null || result.AccessToken is null || result.RefreshToken is null)
+            {
+                return Unauthorized("Invalid refresh token.");
+            }
+            return Ok(result);
+        }
         
 
     }

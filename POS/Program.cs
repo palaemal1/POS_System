@@ -4,14 +4,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Model.Common;
 using BAL.ServiceManager;
-using Microsoft.EntityFrameworkCore;  // Required for Database.CanConnect()
-using Repository;                    // Namespace where DataContext is
-using Microsoft.Extensions.DependencyInjection;
 using Model;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.Extensions.Options;
 
 internal class Program
 {
@@ -82,7 +78,7 @@ internal class Program
                      ValidateAudience=true,
                      ValidAudience = builder.Configuration["AppSettings:Audience"], 
                      ValidateLifetime=true, 
-                     IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)), 
+                     IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)),
                      ValidateIssuerSigningKey=true
                  };
                  });
@@ -128,6 +124,7 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseCors("AllowPowerApps");

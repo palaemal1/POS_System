@@ -11,6 +11,8 @@ namespace BAL.IService
     public interface IAuthService
     {
        // Task<Employees?> Register(AddNewEmployeeDTO input);
-        Task<string?> Login(AddNewEmployeeDTO input);
+        Task<TokenResponseDTO?> Login(AddNewEmployeeDTO input);
+
+        Task<TokenResponseDTO?> RefreshTokenAsync(RefreshTokenRequestDTO input);
     }
 }

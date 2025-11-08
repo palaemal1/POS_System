@@ -22,7 +22,9 @@ namespace POS.Controllers
             _unitofWork = unitofWork;
             _orderItemService = orderItemService;
         }
-        [Authorize]
+
+        
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetAllOrderItem")]
         public async Task<IActionResult> GetOrderItem()
         {
