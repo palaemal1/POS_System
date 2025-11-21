@@ -40,6 +40,13 @@ namespace POS.Controllers
             return Ok(new ResponseModel { Data = data });
         }
 
+        [HttpPost("GetOrderItemListById")]
+        public async Task<IActionResult> GetOrderItemListById(string id)
+        {
+            var data = await _orderItemService.GetOrderItemListById(id);
+            return Ok(new ResponseModel { Data = data });
+        }
+
         [HttpGet("GetOrderItemsWithPagination")]
         public async Task<IActionResult> GetOrderItemsWithPagination(
             int page,

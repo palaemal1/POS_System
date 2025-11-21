@@ -31,6 +31,12 @@ namespace BAL.Service
             return data;
         }
 
+        public async Task<IEnumerable<OrderItems>>GetOrderItemListById(string id)
+        {
+            var data = (await _unitofWork.OrderItem.GetByCondition(x => x.OrderId == id));
+            return data;
+        }
+
         public async Task<IEnumerable<OrderItems>> GetOrderItemWithPagination(int page,int pageSize)
         {
             var data = await _unitofWork.OrderItem.GetAllAsyncWithPagination(page, pageSize);

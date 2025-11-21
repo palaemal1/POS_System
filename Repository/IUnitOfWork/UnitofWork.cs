@@ -25,6 +25,7 @@ namespace Repository
             Employee = new EmployeeRepository(_content);
             Order = new OrderRepository(_content);
             Customer = new CustomerRepository(_content);
+            Payment = new PaymentRepository(_content);
         }
 
         
@@ -37,6 +38,7 @@ namespace Repository
         public ICategoryRepository Category { get; set; }
         public IOrderItemRepository OrderItem { get; set; }
         public IInventoryTransactionRepository InventoryTransaction { get; set; }
+        public IPaymentRepository Payment { get; set; }
         public IEmployeeRepository Employee { get; set; }
         public IOrderRepository Order { get; set; }
         public ICustomerRepository Customer { get; set; }

@@ -11,10 +11,10 @@ namespace Model.Entities
     {
         [Key]
         public Guid TransactionId { get; set; }
-        public Guid? ProductId { get; set; }
+        public string? ProductId { get; set; }
         public int QtyChange { get; set; }
         public string? TransactionType { get; set; }
-        public Guid? ReferenceId { get; set; } = new Guid();
+        
 
     }
 }

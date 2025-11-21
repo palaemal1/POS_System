@@ -14,6 +14,7 @@ namespace Repository.IUnitOfWork
         ICategoryRepository Category { get; }
         IOrderItemRepository OrderItem { get; }
         IInventoryTransactionRepository InventoryTransaction { get; }
+        IPaymentRepository Payment { get; }
         IEmployeeRepository Employee { get; }
         IOrderRepository Order { get; }
         ICustomerRepository Customer { get; }

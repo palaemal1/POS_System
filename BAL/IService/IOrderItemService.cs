@@ -17,6 +17,7 @@ namespace BAL.IService
         Task DeleteOrderItem(Guid id);
 
         Task<IEnumerable<object>> GetAllOrderItemList();
+        Task<IEnumerable<OrderItems>> GetOrderItemListById(string id);
         Task AddMultipleOrderItem(IEnumerable<AddNewOrderItem> inputs);
         Task<IEnumerable<OrderItems>> GetOrderItemWithPagination(int page, int pageSize);
         Task<IEnumerable<OrderItems>> GetOrderItemsWithPagination(
